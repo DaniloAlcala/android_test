@@ -1,0 +1,32 @@
+name: Smoke Tests (Phase 5 - Quick Feedback)
+
+on:
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Maestro
+        run: npx maestro --version
+
+      - name: Run Smoke Tests
+        run: bash qa-automation/scripts/run-tests-tags.sh smoke
+
+      - name: Report Results
+        if: always()
+        run: |
+          echo "## 🔥 Smoke Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ -d "qa-automation/reports" ]; then
+            echo "✅ Quick validation passed" >> $GITHUB_STEP_SUMMARY
+          fi

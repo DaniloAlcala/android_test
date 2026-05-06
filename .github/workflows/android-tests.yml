@@ -1,0 +1,60 @@
+name: Android Tests (Phase 3)
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  android-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        api-level: [33]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Maestro CLI
+        run: |
+          npm install -g maestro-cli
+          npx maestro --version
+
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          cores: 2
+          ram: 2048
+          disk-size: 2048
+          script: |
+            adb wait-for-device
+            adb shell getprop ro.build.version.release
+            bash qa-automation/scripts/run-tests.sh
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-test-logs-api${{ matrix.api-level }}
+          path: qa-automation/reports/
+
+      - name: Test Report Summary
+        if: always()
+        run: |
+          echo "## 📱 Android Test Results (API ${{ matrix.api-level }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -d "qa-automation/reports" ]; then
+            echo "✅ Reports available in artifacts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No test reports found" >> $GITHUB_STEP_SUMMARY
+          fi

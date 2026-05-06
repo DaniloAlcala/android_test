@@ -1,0 +1,20 @@
+# Test Reports Directory
+
+This directory stores test execution reports and logs.
+
+## File Types
+
+- `*.log` - Raw test execution logs
+- `*.json` - Structured test results
+- `*.html` - HTML test reports
+
+## Structure
+
+```
+reports/
+  ├── 2025-05-06-run-001.log
+  ├── 2025-05-06-run-001.json
+  └── summary.md
+```
+
+Generated automatically by CI/CD and local scripts.

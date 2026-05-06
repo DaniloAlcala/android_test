@@ -1,0 +1,62 @@
+name: iOS Tests (Phase 4)
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  ios-tests:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Maestro CLI
+        run: |
+          npm install -g maestro-cli
+          npx maestro --version
+
+      - name: Set up iOS Simulator
+        run: |
+          # Create a simulator
+          xcrun simctl create "Test iPhone" \
+            com.apple.CoreSimulator.CoreSimulatorService \
+            com.apple.dt.Xcode.CoreSimulator.Profiles.iPhone15
+          
+          # Start simulator
+          xcrun simctl boot "Test iPhone"
+          sleep 10
+
+      - name: Run iOS Tests
+        run: |
+          # Ensure simulator is ready
+          xcrun simctl list devices
+          
+          # Run Maestro tests
+          bash qa-automation/scripts/run-tests.sh
+
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-test-logs
+          path: qa-automation/reports/
+
+      - name: Test Report Summary
+        if: always()
+        run: |
+          echo "## 🍎 iOS Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -d "qa-automation/reports" ]; then
+            echo "✅ Reports available in artifacts" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No test reports found" >> $GITHUB_STEP_SUMMARY
+          fi
