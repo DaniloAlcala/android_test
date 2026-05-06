@@ -94,7 +94,7 @@ else
         TEST_NAME=$(basename "$TEST_FILE" .yaml)
         
         log "Running test: $TEST_NAME"
-        if npx maestro test "$TEST_FILE" >> "$LOG_FILE" 2>&1; then
+        if maestro test "$TEST_FILE" >> "$LOG_FILE" 2>&1; then
             PASS_COUNT=$((PASS_COUNT + 1))
             echo -e "  ${GREEN}✓ PASS${NC}: $TEST_NAME"
         else

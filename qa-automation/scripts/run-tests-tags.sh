@@ -46,7 +46,7 @@ for TEST_FILE in $(find "$TEST_DIR" -name "*.yaml" -type f); do
         TEST_NAME=$(basename "$TEST_FILE" .yaml)
         
         echo -n "Running: $TEST_NAME... "
-        if npx maestro test "$TEST_FILE" >> "$LOG_FILE" 2>&1; then
+        if maestro test "$TEST_FILE" >> "$LOG_FILE" 2>&1; then
             PASS_COUNT=$((PASS_COUNT + 1))
             echo -e "${GREEN}PASS${NC}"
         else

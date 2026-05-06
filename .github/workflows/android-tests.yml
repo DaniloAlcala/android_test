@@ -23,8 +23,11 @@ jobs:
 
       - name: Install Maestro CLI
         run: |
-          npm install -g maestro-cli
-          npx maestro --version
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Verify Maestro
+        run: maestro --version
 
       - name: Start Android Emulator
         uses: reactivecircus/android-emulator-runner@v2

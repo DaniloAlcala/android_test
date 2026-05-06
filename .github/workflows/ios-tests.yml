@@ -19,19 +19,25 @@ jobs:
 
       - name: Install Maestro CLI
         run: |
-          npm install -g maestro-cli
-          npx maestro --version
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Verify Maestro
+        run: maestro --version
 
       - name: Set up iOS Simulator
         run: |
-          # Create a simulator
-          xcrun simctl create "Test iPhone" \
-            com.apple.CoreSimulator.CoreSimulatorService \
-            com.apple.dt.Xcode.CoreSimulator.Profiles.iPhone15
+          # Get available iPhone runtime
+          RUNTIME=$(xcrun simctl list runtimes | grep 'iOS' | tail -1 | awk '{print $NF}')
+          DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-15"
           
-          # Start simulator
-          xcrun simctl boot "Test iPhone"
-          sleep 10
+          # Create and boot simulator
+          SIM_ID=$(xcrun simctl create "QA Test iPhone" "$DEVICE_TYPE" "$RUNTIME")
+          xcrun simctl boot "$SIM_ID"
+          
+          # Wait for boot
+          xcrun simctl bootstatus "$SIM_ID" -b
+          echo "Simulator booted: $SIM_ID"
 
       - name: Run iOS Tests
         run: |
