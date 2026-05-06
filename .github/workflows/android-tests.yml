@@ -2,9 +2,7 @@ name: Android Tests (Phase 3)
 
 on:
   push:
-    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
 
 jobs:
   android-tests:
