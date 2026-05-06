@@ -13,10 +13,11 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AVD_NAME="qa_device"
 EMULATOR_TIMEOUT=300
-TEST_DIR="../maestro"
-REPORTS_DIR="../reports"
+TEST_DIR="$SCRIPT_DIR/../maestro"
+REPORTS_DIR="$SCRIPT_DIR/../reports"
 LOG_FILE="$REPORTS_DIR/$(date +%Y-%m-%d_%H-%M-%S)_test_run.log"
 
 # Create reports directory if it doesn't exist
@@ -38,8 +39,8 @@ log "Report: $LOG_FILE"
 
 # Step 1: Check if Android emulator is already running
 echo -e "\n${YELLOW}[1/5] Checking Android emulator...${NC}"
-if adb devices | grep -q "$AVD_NAME"; then
-    log "Emulator already running"
+if adb devices | grep -q "emulator\|device$"; then
+    log "Device already connected, skipping emulator start"
 else
     log "Starting emulator: $AVD_NAME"
     emulator -avd "$AVD_NAME" -no-snapshot -no-audio -no-boot-anim &

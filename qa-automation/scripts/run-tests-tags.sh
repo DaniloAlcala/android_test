@@ -19,8 +19,9 @@ if [ $# -eq 0 ]; then
 fi
 
 TAG=$1
-TEST_DIR="../maestro"
-REPORTS_DIR="../reports"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEST_DIR="$SCRIPT_DIR/../maestro"
+REPORTS_DIR="$SCRIPT_DIR/../reports"
 LOG_FILE="$REPORTS_DIR/$(date +%Y-%m-%d_%H-%M-%S)_${TAG}_tests.log"
 
 mkdir -p "$REPORTS_DIR"
