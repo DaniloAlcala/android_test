@@ -1,153 +1,190 @@
-# 🔧 Setup Status & Next Steps
+# 🔧 Local Setup - Docker Guide
 
-**Date:** May 6, 2026  
-**System:** Windows 10  
-
----
-
-## 📊 Current Status
-
-### ✅ What's Working
-
-```
-✓ Node.js v20.0.0        (Available)
-✓ npm                     (Available)
-✓ ADB (Android tools)     (Available - v36.0.0)
-✓ Android SDK            (Partially installed)
-✓ Existing AVD           (android_api_11 found)
-✓ All code created       (15+ files)
-✓ Documentation          (Complete)
-```
-
-### ⚠️ Challenges
-
-```
-✗ avdmanager not accessible (cmdline-tools incomplete)
-✗ Emulator binary not found (bin64 incomplete)
-✗ Maestro npm install     (AWS SDK conflicts on Windows)
-```
+**Date:** May 7, 2026  
+**Status:** Ready for Local Testing via Docker
 
 ---
 
-## 🎯 Recommended Path Forward
+## ✅ Current Status
 
-### Option 1: Use Existing AVD with Docker (Recommended)
+### What Works
 
-Instead of fighting Windows SDK issues, use Docker:
-
-```bash
-# 1. Install Docker Desktop for Windows
-# https://docs.docker.com/desktop/install/windows-install/
-
-# 2. Run Android emulator in Docker
-docker pull budtmo/docker-android-x11
-docker run -d -p 5900:5900 -p 5037:5037 -e DISPLAY=:0 budtmo/docker-android-x11
-
-# 3. Run Maestro tests against containerized emulator
-bash qa-automation/scripts/run-tests.sh
+```
+✓ Maestro CLI 2.5.1          (Installed)
+✓ Node.js v20.0.0            (Available)
+✓ ADB 36.0.0                 (Available)
+✓ Docker Desktop             (Running)
+✓ Android Image (API 30)     (Downloaded)
+✓ All code created           (15+ files)
+✓ Documentation              (Complete)
 ```
 
-### Option 2: Use Cloud-Based Testing (Fastest)
+### What's New
 
-Use BrowserStack or Sauce Labs for testing without local setup:
-
-```bash
-# 1. Sign up for free tier
-# 2. Get API credentials
-# 3. Modify scripts to use cloud testing
 ```
-
-### Option 3: Focus on GitHub Actions (Recommended for Team)
-
-Your CI/CD is already configured and will work perfectly on GitHub's Ubuntu runners:
-
-```bash
-# Just push code to GitHub
-git add .
-git commit -m "Add Mobile QA Framework"
-git push origin main
-
-# GitHub Actions runs tests automatically:
-# ✓ Android emulator (ubuntu-latest)
-# ✓ iOS simulator (macos-latest)  
-# ✓ Results in PR status
-```
-
-### Option 4: Android Studio AVD Manager (GUI)
-
-Use Android Studio instead:
-
-```bash
-# 1. Open Android Studio
-# 2. Device Manager → Create Virtual Device
-# 3. API 33, x86_64, name: qa_device
-# 4. Boot it
-# 5. Run tests against running emulator
+✓ Docker Compose setup       (docker-compose.yml)
+✓ 3 automation scripts       (docker-start/test/full.sh)
+✓ Local testing via Docker   (No Android SDK needed)
 ```
 
 ---
 
-## ✅ What You Can Do Right Now
+## 🚀 Quick Start - 3 Commands
 
-### 1. Validate Your Setup is Production-Ready
+### **Option 1: Manual Control** (Best for Development)
 
 ```bash
-# All code is ready
-cd qa-automation
-ls -la maestro/
-ls -la scripts/
-ls -la ai/
+# Terminal 1: Start emulator
+bash docker-start.sh
 
-# Check workflows
-cat .github/workflows/android-tests.yml
-cat .github/workflows/ios-tests.yml
+# Terminal 2: Code/modify tests
+# ...edit qa-automation/maestro/*.yaml...
+
+# Terminal 2: Execute tests
+bash docker-test.sh
 ```
 
-### 2. Review & Commit to Git
+### **Option 2: One-liner** (Quick Test)
 
 ```bash
-git add .
-git status
-
-# Verify all files
-git ls-files | grep qa-automation
-git ls-files | grep .github/workflows
-git ls-files | grep CONTRIBUTING
+bash docker-full.sh
+# Starts emulator + runs all tests + shows results
 ```
 
-### 3. Push to GitHub (Tests Run Automatically!)
+### **Option 3: npm Scripts**
 
 ```bash
-git push origin main
-
-# Watch GitHub Actions run tests automatically
-# https://github.com/YOUR_REPO/actions
-```
-
-### 4. Test AI Generation Locally
-
-```bash
-# Set OpenAI API key
-$env:OPENAI_API_KEY = "sk-..."
-
-# Generate test (doesn't require Android SDK)
-cd qa-automation/ai
-node generateTest.js "User can login with email"
-
-# Review generated file
-cat ../maestro/user/can-login-with-email.yaml
+npm run docker:start   # Start emulator
+npm run docker:test    # Run tests
+npm run docker:full    # Full automation
 ```
 
 ---
 
-## 🚀 Recommended Next Step
+## 📂 What You Need
 
-**Push to GitHub → Let CI/CD Handle Testing**
+✅ **Already have:**
+- Maestro CLI 2.5.1
+- Docker Desktop (running)
+- Git/Git Bash
 
-This is the most practical approach because:
+❌ **Don't need anymore:**
+- ~~Android SDK/AVD~~ (Docker handles this)
+- ~~Local emulator~~ (Docker handles this)
+- ~~avdmanager~~ (Docker handles this)
 
-1. ✅ **GitHub Actions runners are pre-configured** with Android SDK
-2. ✅ **No local environment issues** (no Windows SDK conflicts)
+---
+
+## 🎯 Next Steps
+
+### 1️⃣ **Verify Docker is Running**
+
+```bash
+docker ps
+# Should show: android-test-emu (or be empty if first time)
+```
+
+### 2️⃣ **Start Local Testing**
+
+```bash
+# Option A: Full automation
+bash docker-full.sh
+
+# Option B: Manual (better for coding)
+bash docker-start.sh      # One time
+bash docker-test.sh       # Every time you change tests
+```
+
+### 3️⃣ **Create Your Tests**
+
+```bash
+# Create new test file
+cat > qa-automation/maestro/myapp/login.yaml << 'EOF'
+appId: com.example.myapp
+---
+- launchApp
+- assertVisible: "Login"
+- tapOn: "Email"
+- inputText: "user@example.com"
+- tapOn: "Password"
+- inputText: "password123"
+- tapOn: "Sign In"
+- assertVisible: "Dashboard"
+EOF
+
+# Run it
+bash docker-test.sh
+```
+
+---
+
+## 💡 Tips
+
+| Task | Command |
+|------|---------|
+| Start emulator | `bash docker-start.sh` |
+| Run tests | `bash docker-test.sh` |
+| Full cycle | `bash docker-full.sh` |
+| View logs | `docker-compose logs -f` |
+| Stop emulator | `docker-compose down` |
+| Clean everything | `docker-compose down -v && docker system prune -a` |
+| Access container | `docker exec -it android-test-emu bash` |
+
+---
+
+## 📊 Workflow
+
+```
+Loop:
+  1. bash docker-start.sh           (once)
+  2. Edit qa-automation/maestro/*.yaml
+  3. bash docker-test.sh            (repeat)
+  
+When ready:
+  4. git add .
+  5. git commit -m "Add tests"
+  6. git push origin config_test_android
+  7. GitHub Actions runs automatically
+```
+
+---
+
+## ❓ Troubleshooting
+
+**Docker won't start:**
+```bash
+docker ps  # Check if Docker Desktop is running
+```
+
+**Emulator won't boot:**
+```bash
+docker logs android-test-emu
+```
+
+**Tests fail:**
+```bash
+docker exec android-test-emu maestro test qa-automation/maestro/yourtest.yaml
+```
+
+**Clean slate:**
+```bash
+docker-compose down -v
+docker-compose up -d
+```
+
+---
+
+## ✨ Alternative Paths
+
+| Method | When | Pros | Cons |
+|--------|------|------|------|
+| **Docker** (Now) | Local dev | Easy setup, consistent | Need Docker |
+| **GitHub Actions** | CI/CD | No local setup | Slower feedback |
+| **Android Studio** | If needed | Native, visual | Windows SDK issues |
+
+**Recommendation:** Use Docker locally + GitHub Actions for CI/CD ✅
+
+
 3. ✅ **Tests run on every push/PR automatically**
 4. ✅ **Full iOS + Android testing** in parallel
 5. ✅ **Team members don't need local setup** (except for writing tests)
