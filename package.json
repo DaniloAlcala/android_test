@@ -9,7 +9,10 @@
     "test:syntax": "node scripts/validate-yaml.js",
     "test:schemas": "node scripts/validate-workflows.js",
     "demo": "node qa-automation/ai/demo.js",
-    "check": "bash qa-automation/scripts/check-framework.sh"
+    "check": "bash qa-automation/scripts/check-framework.sh",
+    "docker:start": "bash docker-start.sh",
+    "docker:test": "bash docker-test.sh",
+    "docker:full": "bash docker-full.sh"
   },
   "keywords": [
     "mobile",

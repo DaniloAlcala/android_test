@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  android-emulator:
+    image: androidsdk/android-30:latest
+    container_name: android-test-emu
+    ports:
+      - "5037:5037"  # ADB port
+      - "5554:5554"  # Emulator console
+      - "5555:5555"  # Emulator adb
+    environment:
+      - ANDROID_SDK_ROOT=/opt/android-sdk-linux
+      - ANDROID_HOME=/opt/android-sdk-linux
+    volumes:
+      - android-data:/root/.android
+      - ./qa-automation:/workspace/qa-automation
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    command: >
+      bash -c "
+      echo 'Android Emulator running...' &&
+      sleep infinity
+      "
+    healthcheck:
+      test: ["CMD", "adb", "shell", "echo", "ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  android-data:
+    driver: local
