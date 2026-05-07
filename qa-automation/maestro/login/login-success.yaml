@@ -1,5 +1,5 @@
-appId: com.example.myapp
+appId: ar.com.camuzzigas.oficinavirtual
 ---
 - launchApp
-- assertVisible: "Login"
-- assertVisible: "Password"
+- waitForAnimationToEnd
+- assertVisible: "Oficina Virtual"
