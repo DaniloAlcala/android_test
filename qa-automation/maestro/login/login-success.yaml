@@ -1,5 +1,26 @@
 appId: ar.com.camuzzigas.oficinavirtual
 ---
-- launchApp
+# entrar a la app y verificar que se muestre la pantalla de inicio
+- launchApp:
+    clearState: true
 - waitForAnimationToEnd
 - assertVisible: "Oficina Virtual"
+
+#  Validar que ves los campos
+- assertVisible: "mail@ejemplo.com"
+- assertVisible: "Contraseña"
+
+# Tocar campo usuario
+- tapOn: "mail@ejemplo.com"
+
+# Escribir usuario
+- inputText: "daniloalcala@gmail.com"
+
+# Tocar campo contraseña
+- tapOn: "Contraseña"
+
+# Escribir contraseña
+- inputText: "123Camuzzi"
+
+# Tocar botón ingresar
+- tapOn: "Iniciar Sesión"
