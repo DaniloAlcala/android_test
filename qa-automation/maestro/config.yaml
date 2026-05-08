@@ -1,0 +1,15 @@
+appId: ar.com.camuzzigas.oficinavirtual
+
+# Platform config
+platform:
+  android:
+    disableAnimations: false
+  ios:
+    disableAnimations: false
+
+# Configuración global para todos los flows
+# onFlowStart:
+#   - runFlow: shared/login-flow.yaml
+
+# onFlowComplete:
+#   - runFlow: shared/logout-flow.yaml

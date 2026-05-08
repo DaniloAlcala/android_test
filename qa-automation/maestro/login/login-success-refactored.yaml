@@ -1,0 +1,17 @@
+appId: ar.com.camuzzigas.oficinavirtual
+---
+# Test: Login Success
+# Descripción: Verifica que un usuario puede iniciar sesión exitosamente
+
+- launchApp:
+    clearState: true
+- waitForAnimationToEnd
+
+# Ejecutar flujo de login reutilizable
+- runFlow: ../shared/login-flow.yaml
+
+# Verificar que el login fue exitoso
+- assertVisible: "Camuzzi Gas"
+
+# Logout
+- runFlow: ../shared/logout-flow.yaml

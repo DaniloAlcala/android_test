@@ -1,0 +1,10 @@
+appId: ar.com.camuzzigas.oficinavirtual
+---
+# Shared: Logout flow
+# Uso: runFlow: shared/logout-flow.yaml
+# Requiere: App logueada
+
+- tapOn:
+    text: "x"
+    index: 0
+- waitForAnimationToEnd

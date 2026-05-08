@@ -1,0 +1,20 @@
+appId: ar.com.camuzzigas.oficinavirtual
+---
+# Shared: Login flow
+# Uso: runFlow: shared/login-flow.yaml
+# Requiere: App en pantalla de login con campos visibles
+
+- assertVisible: "Oficina Virtual"
+- assertVisible: "mail@ejemplo.com"
+- assertVisible: "Contraseña"
+
+# Ingresar credenciales
+- tapOn: "mail@ejemplo.com"
+- inputText: "daniloalcala@gmail.com"
+
+- tapOn: "Contraseña"
+- inputText: "123Camuzzi"
+
+# Tap login
+- tapOn: "Iniciar Sesión"
+- waitForAnimationToEnd

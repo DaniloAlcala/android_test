@@ -1,0 +1,7 @@
+appId: ar.com.camuzzigas.oficinavirtual
+---
+# Shared: Common actions
+# Uso: runFlow: shared/common-actions/press-back.yaml
+# Gestos reutilizables
+
+- back

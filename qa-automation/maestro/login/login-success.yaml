@@ -24,3 +24,9 @@ appId: ar.com.camuzzigas.oficinavirtual
 
 # Tocar botón ingresar
 - tapOn: "Iniciar Sesión"
+
+- waitForAnimationToEnd
+- assertVisible: ""
+- tapOn: ""
+
+- assertVisible: "Camuzzi Gas"
